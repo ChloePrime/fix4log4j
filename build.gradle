@@ -7,13 +7,12 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:3.+'
     }
 }
-        
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.1.0'
+version = '1.1.4'
 group = 'chloeprime.fix4log4j' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Fix4Log4J'
 
@@ -64,7 +63,7 @@ repositories {
 
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
-    implementation 'org.bukkit:bukkit:1.12.2-R0.1-SNAPSHOT'
+    implementation 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -79,6 +78,15 @@ jar {
             "Implementation-Vendor" :"ChloePrime",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
         ])
+    }
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        include 'plugin.yml'
+
+        expand 'version': project.version, 'mcversion': '1.12.2'
     }
 }
 

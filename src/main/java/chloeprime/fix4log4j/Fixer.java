@@ -1,15 +1,16 @@
 package chloeprime.fix4log4j;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.appender.AbstractManager;
 import org.apache.logging.log4j.core.net.JndiManager;
 
 import javax.naming.Context;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author ChloePrime
@@ -19,11 +20,23 @@ public class Fixer {
         logger.info("Fix4Log4J loaded.");
         logger.info("If you see stacktrace below, CLOSE EVERYTHING IMMEDIATELY!");
 
-        String someRandomString =
-                RandomStringUtils.randomAlphanumeric(40)
-                        + ":"
-                        + RandomStringUtils.randomAlphanumeric(40);
-        logger.info("Exploit Test: ${jndi:ldap://" + someRandomString + "}");
+        String someRandomUri = randomUri();
+        logger.info("Exploit Test: ${jndi:ldap://" + someRandomUri + "}");
+    }
+
+    /**
+     * char[40] + ':' + char[40]
+     */
+    private static String randomUri() {
+        char[] buf = new char[81];
+        Random rng = new SecureRandom();
+
+        for (int i = 0; i < buf.length; i++) {
+            buf[i] = (char) ('a' + rng.nextInt('z' - 'a' + 1));
+        }
+        buf[40] = ':';
+
+        return new String(buf);
     }
 
     public static void disableJndiManager() {
@@ -41,7 +54,7 @@ public class Fixer {
         Class<AbstractManager> mapHolder = AbstractManager.class;
         // Find "static Map<?, ?>" fields
         Arrays.stream(mapHolder.getDeclaredFields()).filter(
-                f -> (f.getModifiers() & Modifier.STATIC) > 0
+                f -> Modifier.isStatic(f.getModifiers())
         ).filter(
                 f -> Map.class.isAssignableFrom(f.getType())
         ).map(
@@ -82,7 +95,7 @@ public class Fixer {
             try {
                 // get access to it
                 f.setAccessible(true);
-                FieldUtils.removeFinalModifier(f);
+                removeFinalModifier(f);
                 // replace implementation
                 f.set(jndiManager, EmptyJndiContext.INSTANCE);
             } catch (IllegalAccessException e) {
@@ -90,5 +103,33 @@ public class Fixer {
             }
         });
     }
+
+    /**
+     * Copied from Apache Common Lang3.
+     * We need to copy it as bukkit has no Lang3 dependency.
+     */
+    public static void removeFinalModifier(final Field field)
+            throws IllegalAccessException {
+        try {
+            if (Modifier.isFinal(field.getModifiers())) {
+                // Do all JREs implement Field with a private ivar called "modifiers"?
+                final Field modifiersField = Field.class.getDeclaredField("modifiers");
+                final boolean doForceAccess = !modifiersField.isAccessible();
+                if (doForceAccess) {
+                    modifiersField.setAccessible(true);
+                }
+                try {
+                    modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                } finally {
+                    if (doForceAccess) {
+                        modifiersField.setAccessible(false);
+                    }
+                }
+            }
+        } catch (final NoSuchFieldException ignored) {
+            // The field class always contains a modifiers field
+        }
+    }
+
     private Fixer() {}
 }
