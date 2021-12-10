@@ -1,0 +1,16 @@
+[
+{
+  "modid": "fix4log4j",
+  "name": "Fix4Log4J",
+  "description": "Fixes {jndi:ldap://} exploit for Apache Log4J2.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["ChloePrime"],
+  "credits": "The Forge and FML guys",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
