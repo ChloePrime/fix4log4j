@@ -4,6 +4,7 @@ import chloeprime.fix4log4j.Censor;
 import chloeprime.fix4log4j.Fixer;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -25,10 +26,12 @@ public class Fix4Log4JBukkitPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         super.onEnable();
         Fixer.doRuntimeTest(LogManager.getLogger("Fix4Log4J"));
-        doCensor = getConfig().getBoolean("censor-user-input");
+
+        doCensor = getConfig().getBoolean("censor-user-input", true);
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void censorCommand(PlayerCommandPreprocessEvent event) {
         if (!doCensor) {
             return;
@@ -39,7 +42,7 @@ public class Fix4Log4JBukkitPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void censorChatAsync(AsyncPlayerChatEvent event) {
         if (!doCensor) {
             return;

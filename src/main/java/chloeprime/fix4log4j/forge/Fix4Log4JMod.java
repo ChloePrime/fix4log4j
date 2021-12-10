@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class Fix4Log4JMod {
     public static final String MODID = "fix4log4j";
     public static final String NAME = "Fix4Log4J";
-    public static final String VERSION = "1.1.4";
+    public static final String VERSION = "1.2.3";
 
     @EventHandler
     public void construct(FMLConstructionEvent event) {
