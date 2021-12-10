@@ -55,6 +55,7 @@ minecraft {
 }
 
 repositories {
+    mavenCentral()
     maven {
         name 'spigot-repo'
         url 'https://hub.spigotmc.org/nexus/content/repositories/public/'
@@ -64,6 +65,16 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2855'
     implementation 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+
+    testImplementation('org.junit:junit-bom:5.8.2')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.2')
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
