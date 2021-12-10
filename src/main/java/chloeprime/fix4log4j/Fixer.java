@@ -1,9 +1,5 @@
 package chloeprime.fix4log4j;
 
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLConstructionEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.logging.log4j.Logger;
@@ -18,30 +14,8 @@ import java.util.Map;
 /**
  * @author ChloePrime
  */
-@Mod(
-        modid = Fix4Log4J.MODID,
-        name = Fix4Log4J.NAME,
-        version = Fix4Log4J.VERSION,
-        useMetadata = true
-)
-public class Fix4Log4J {
-    public static final String MODID = "fix4log4j";
-    public static final String NAME = "Fix4Log4J";
-    public static final String VERSION = "1.0.2";
-
-    @EventHandler
-    public void construct(FMLConstructionEvent event) {
-        try {
-            disableJndiManager();
-        } catch (Exception ex) {
-            throw new ExceptionInInitializerError(ex);
-        }
-    }
-
-
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        Logger logger = event.getModLog();
+public class Fixer {
+    public static void doRuntimeTest(Logger logger) {
         logger.info("Fix4Log4J loaded.");
         logger.info("If you see stacktrace below, CLOSE EVERYTHING IMMEDIATELY!");
 
@@ -52,7 +26,15 @@ public class Fix4Log4J {
         logger.info("Exploit Test: ${jndi:ldap://" + someRandomString + "}");
     }
 
-    private static void disableJndiManager() {
+    public static void disableJndiManager() {
+        try {
+            Fixer.disableJndiManager0();
+        } catch (Exception ex) {
+            throw new ExceptionInInitializerError(ex);
+        }
+    }
+
+    private static void disableJndiManager0() {
         // Load default manager
         JndiManager.getDefaultManager();
 
@@ -108,4 +90,5 @@ public class Fix4Log4J {
             }
         });
     }
+    private Fixer() {}
 }
