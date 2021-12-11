@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "fix4log4j",
+  "version": "${version}",
+  "name": "Fix4Log4J",
+  "description": "",
+  "authors": [
+    "ChloePrime"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/fix4log4j/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "chloeprime.fix4log4j.fabric116.Fix4Log4JMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.2.0.7",
+    "minecraft": "1.16.5"
+  }
+}
