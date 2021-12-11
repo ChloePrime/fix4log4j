@@ -108,7 +108,7 @@ public class Fixer {
      * Copied from Apache Common Lang3.
      * We need to copy it as bukkit has no Lang3 dependency.
      */
-    public static void removeFinalModifier(final Field field)
+    private static void removeFinalModifier(final Field field)
             throws IllegalAccessException {
         try {
             if (Modifier.isFinal(field.getModifiers())) {

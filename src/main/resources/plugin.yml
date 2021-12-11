@@ -1,3 +1,0 @@
-name: Fix4Log4J
-version: ${version}
-main: chloeprime.fix4log4j.bukkit.Fix4Log4JBukkitPlugin
