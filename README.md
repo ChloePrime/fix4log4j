@@ -1,2 +1,2 @@
 # fix4log4j
-修复近日发现的log4j严重漏洞。
+在不更改 版本Json / forge版本 的情况下，修复近日发现的 log4j RCE 漏洞。
